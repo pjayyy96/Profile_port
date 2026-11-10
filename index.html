@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About Me</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --night-1: #14102a;
+      --night-2: #2a1d4a;
+      --panel: #241a3d;
+      --panel-edge: #0b0716;
+      --stone: #7a7f99;
+      --stone-dark: #4b4f66;
+      --gold: #f5c542;
+      --red: #c83a3a;
+      --grass: #2e6b35;
+      --grass-light: #4a9a4a;
+      --text: #f2ecd9;
+      --muted: #b9b0cf;
+      --accent: #f5c542;
+      --accent-2: #6fd3ff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background:
+        radial-gradient(2px 2px at 10% 15%, #fff 50%, transparent 51%),
+        radial-gradient(2px 2px at 30% 60%, #fff 50%, transparent 51%),
+        radial-gradient(2px 2px at 70% 25%, #fff 50%, transparent 51%),
+        radial-gradient(2px 2px at 85% 70%, #fff 50%, transparent 51%),
+        radial-gradient(2px 2px at 50% 40%, #fff 50%, transparent 51%),
+        linear-gradient(180deg, var(--night-1) 0%, var(--night-2) 100%);
+      background-attachment: fixed;
+      color: var(--text);
+      font-family: "VT323", "Courier New", monospace;
+      font-size: 22px;
+      line-height: 1.35;
+      image-rendering: pixelated;
+    }
+    a { color: var(--accent-2); text-decoration: none; }
+    a:hover { color: var(--gold); }
+    .container { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+    section { padding: 56px 0; }
+
+    h1, h2, h3 { font-family: "Press Start 2P", monospace; font-weight: normal; line-height: 1.5; }
+    h2 {
+      font-size: 18px;
+      color: var(--gold);
+      text-shadow: 3px 3px 0 #000;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    h2::before, h2::after {
+      content: "";
+      flex: 1;
+      height: 4px;
+      background: repeating-linear-gradient(90deg, var(--stone) 0 8px, transparent 8px 12px);
+    }
+    h2::before { flex: 0 0 24px; }
+    h3 { font-size: 13px; color: var(--text); margin-bottom: 10px; }
+
+    /* Pixel panel: stone border + hard shadow */
+    .panel {
+      background: var(--panel);
+      border: 4px solid var(--stone);
+      box-shadow:
+        inset 0 0 0 4px var(--panel-edge),
+        8px 8px 0 #000;
+      padding: 22px;
+    }
+
+    /* Navigation */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--panel-edge);
+      border-bottom: 4px solid var(--stone);
+      box-shadow: 0 4px 0 #000;
+    }
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 60px;
+      flex-wrap: wrap;
+    }
+    nav .logo { font-family: "Press Start 2P", monospace; font-size: 14px; color: var(--gold); }
+    nav ul { display: flex; gap: 18px; list-style: none; flex-wrap: wrap; }
+    nav ul a { color: var(--text); font-size: 22px; }
+    nav ul a:hover { color: var(--gold); }
+
+    /* Hero + castle scene */
+    .hero { padding: 64px 0 0; }
+    .hero-text { text-align: center; }
+    .avatar {
+      width: 96px;
+      height: 96px;
+      margin: 0 auto 20px;
+      border: 4px solid var(--gold);
+      box-shadow: 0 0 0 4px #000, 6px 6px 0 #000;
+      background: var(--red);
+      display: grid;
+      place-items: center;
+      font-family: "Press Start 2P", monospace;
+      font-size: 24px;
+      color: var(--gold);
+    }
+    .hero h1 { font-size: clamp(20px, 5vw, 34px); text-shadow: 4px 4px 0 #000; }
+    .hero .title { color: var(--accent-2); font-size: 26px; margin-top: 12px; }
+    .hero .tagline { color: var(--muted); max-width: 640px; margin: 16px auto 0; }
+    .buttons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 26px; }
+    .btn {
+      font-family: "Press Start 2P", monospace;
+      font-size: 11px;
+      padding: 12px 16px;
+      color: #1a1205;
+      background: var(--gold);
+      border: 4px solid #000;
+      box-shadow: inset -4px -4px 0 #b8861a, 4px 4px 0 #000;
+    }
+    .btn.alt { background: var(--stone); color: var(--text); box-shadow: inset -4px -4px 0 var(--stone-dark), 4px 4px 0 #000; }
+    .btn:hover { color: #1a1205; transform: translate(2px, 2px); box-shadow: inset -4px -4px 0 #b8861a, 2px 2px 0 #000; }
+    .btn.alt:hover { color: var(--text); }
+
+    .scene {
+      position: relative;
+      width: min(100%, 640px);
+      margin: 40px auto 0;
+    }
+    .scene svg.castle { display: block; width: 100%; height: auto; shape-rendering: crispEdges; }
+    .knight {
+      position: absolute;
+      left: 40%;
+      bottom: 12%;
+      width: 8%;
+      min-width: 36px;
+      height: auto;
+      shape-rendering: crispEdges;
+      animation: bob 1s steps(2) infinite;
+    }
+    @keyframes bob { 50% { transform: translateY(-3px); } }
+    .scene .ground {
+      height: 28px;
+      background:
+        repeating-linear-gradient(90deg, var(--grass) 0 16px, var(--grass-light) 16px 20px, var(--grass) 20px 32px),
+        var(--grass);
+      border-top: 4px solid #000;
+    }
+
+    /* About */
+    .about-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+    .about-grid p + p { margin-top: 14px; }
+    .facts dt { color: var(--accent-2); font-size: 20px; }
+    .facts dd { margin-bottom: 12px; color: var(--text); }
+
+    /* Skills */
+    .skills { display: flex; flex-wrap: wrap; gap: 12px; }
+    .skill {
+      font-size: 20px;
+      padding: 4px 12px;
+      background: var(--night-1);
+      border: 4px solid var(--gold);
+      box-shadow: 4px 4px 0 #000;
+      color: var(--gold);
+    }
+
+    /* Projects */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+    .project p { color: var(--muted); }
+    .project .tags { margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap; }
+    .project .tags span {
+      font-size: 18px;
+      color: var(--accent-2);
+      border: 2px solid var(--accent-2);
+      padding: 0 8px;
+    }
+    .project:hover { transform: translate(-2px, -2px); box-shadow: 10px 10px 0 #000; }
+    .project { transition: transform 0.05s steps(2); }
+
+    /* Timeline */
+    .timeline { position: relative; padding-left: 30px; }
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 8px; top: 8px; bottom: 8px;
+      width: 4px;
+      background: repeating-linear-gradient(180deg, var(--stone) 0 8px, transparent 8px 12px);
+    }
+    .timeline-item { position: relative; margin-bottom: 26px; }
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -28px; top: 6px;
+      width: 16px; height: 16px;
+      background: var(--gold);
+      border: 4px solid #000;
+    }
+    .timeline-item .when { color: var(--accent-2); font-size: 20px; }
+    .timeline-item strong { font-size: 24px; font-weight: normal; color: var(--text); }
+    .timeline-item p { color: var(--muted); }
+
+    /* Contact */
+    .contact { text-align: center; }
+    .contact p { color: var(--muted); margin-bottom: 22px; }
+    .contact-links { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; }
+
+    footer {
+      padding: 32px 0;
+      text-align: center;
+      color: var(--muted);
+      background: var(--panel-edge);
+      border-top: 4px solid var(--stone);
+    }
+
+    @media (max-width: 700px) {
+      body { font-size: 20px; }
+      .about-grid { grid-template-columns: 1fr; }
+      nav ul { gap: 10px; }
+      nav ul a { font-size: 18px; }
+      section { padding: 44px 0; }
+      .knight { left: 38%; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="container">
+      <span class="logo">PJ</span>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#journey">Journey</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container hero-text">
+      <div class="avatar">PJ</div>
+      <h1>PHITCHAYUT<br />CHOEDCHAIYAPHUM</h1>
+      <p class="title">@PJAYYY · AI DEVELOPER</p>
+      <p class="tagline">
+        Computer Science student at BYU-Hawaii. I build platforms, apps, and APIs
+        with and without AI tools, and I want to own the whole stack, from the user
+        interface down to the cloud database.
+      </p>
+      <div class="buttons">
+        <a class="btn" href="#projects">VIEW QUESTS</a>
+        <a class="btn alt" href="#contact">CONTACT</a>
+      </div>
+    </div>
+
+    <!-- Castle scene -->
+    <div class="scene" aria-hidden="true">
+      <svg class="castle" viewBox="0 0 160 96" xmlns="http://www.w3.org/2000/svg">
+        <!-- sky sun/moon -->
+        <rect x="134" y="6" width="8" height="8" fill="#f5c542"/>
+        <rect x="130" y="10" width="16" height="0" fill="#f5c542"/>
+        <!-- stars -->
+        <rect x="8" y="4" width="2" height="2" fill="#fff"/>
+        <rect x="24" y="12" width="2" height="2" fill="#fff"/>
+        <rect x="60" y="4" width="2" height="2" fill="#fff"/>
+        <rect x="100" y="14" width="2" height="2" fill="#fff"/>
+
+        <!-- flags -->
+        <rect x="19" y="4" width="2" height="22" fill="#ccc"/>
+        <rect x="21" y="4" width="8" height="5" fill="#c83a3a"/>
+        <rect x="139" y="4" width="2" height="22" fill="#ccc"/>
+        <rect x="141" y="4" width="8" height="5" fill="#c83a3a"/>
+        <rect x="79" y="0" width="2" height="16" fill="#ccc"/>
+        <rect x="81" y="0" width="9" height="6" fill="#f5c542"/>
+
+        <!-- left tower -->
+        <rect x="8" y="26" width="28" height="60" fill="#7a7f99"/>
+        <rect x="8" y="24" width="6" height="4" fill="#7a7f99"/>
+        <rect x="18" y="24" width="6" height="4" fill="#7a7f99"/>
+        <rect x="28" y="24" width="8" height="4" fill="#7a7f99"/>
+        <rect x="14" y="36" width="4" height="8" fill="#14102a"/>
+        <rect x="26" y="36" width="4" height="8" fill="#14102a"/>
+        <rect x="18" y="58" width="8" height="14" fill="#14102a"/>
+
+        <!-- right tower -->
+        <rect x="124" y="26" width="28" height="60" fill="#7a7f99"/>
+        <rect x="124" y="24" width="6" height="4" fill="#7a7f99"/>
+        <rect x="134" y="24" width="6" height="4" fill="#7a7f99"/>
+        <rect x="144" y="24" width="8" height="4" fill="#7a7f99"/>
+        <rect x="130" y="36" width="4" height="8" fill="#14102a"/>
+        <rect x="142" y="36" width="4" height="8" fill="#14102a"/>
+        <rect x="134" y="58" width="8" height="14" fill="#14102a"/>
+
+        <!-- curtain walls -->
+        <rect x="36" y="52" width="20" height="34" fill="#666b84"/>
+        <rect x="104" y="52" width="20" height="34" fill="#666b84"/>
+        <rect x="36" y="48" width="4" height="4" fill="#666b84"/>
+        <rect x="46" y="48" width="4" height="4" fill="#666b84"/>
+        <rect x="104" y="48" width="4" height="4" fill="#666b84"/>
+        <rect x="114" y="48" width="4" height="4" fill="#666b84"/>
+
+        <!-- central keep -->
+        <rect x="56" y="18" width="48" height="68" fill="#8c91ab"/>
+        <rect x="56" y="14" width="6" height="4" fill="#8c91ab"/>
+        <rect x="66" y="14" width="6" height="4" fill="#8c91ab"/>
+        <rect x="76" y="14" width="8" height="4" fill="#8c91ab"/>
+        <rect x="88" y="14" width="6" height="4" fill="#8c91ab"/>
+        <rect x="98" y="14" width="6" height="4" fill="#8c91ab"/>
+        <rect x="70" y="28" width="4" height="8" fill="#14102a"/>
+        <rect x="86" y="28" width="4" height="8" fill="#14102a"/>
+        <rect x="76" y="40" width="8" height="8" fill="#14102a"/>
+        <!-- gate -->
+        <rect x="72" y="66" width="16" height="20" fill="#14102a"/>
+        <rect x="74" y="62" width="12" height="4" fill="#14102a"/>
+        <rect x="76" y="60" width="8" height="2" fill="#14102a"/>
+        <!-- red banner -->
+        <rect x="60" y="30" width="6" height="12" fill="#c83a3a"/>
+        <rect x="94" y="30" width="6" height="12" fill="#c83a3a"/>
+
+        <!-- ground -->
+        <rect x="0" y="86" width="160" height="10" fill="#2e6b35"/>
+        <rect x="0" y="86" width="160" height="2" fill="#4a9a4a"/>
+      </svg>
+
+      <!-- Pixel knight -->
+      <svg class="knight" viewBox="0 0 12 16" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="0" width="2" height="2" fill="#c83a3a"/>
+        <rect x="3" y="2" width="6" height="4" fill="#c5cde0"/>
+        <rect x="4" y="4" width="4" height="1" fill="#14102a"/>
+        <rect x="2" y="6" width="8" height="2" fill="#9aa3bd"/>
+        <rect x="4" y="8" width="4" height="4" fill="#3a5fcd"/>
+        <rect x="3" y="8" width="1" height="3" fill="#9aa3bd"/>
+        <rect x="8" y="8" width="1" height="3" fill="#9aa3bd"/>
+        <rect x="4" y="12" width="1" height="3" fill="#5a4a7a"/>
+        <rect x="7" y="12" width="1" height="3" fill="#5a4a7a"/>
+        <rect x="3" y="15" width="2" height="1" fill="#000"/>
+        <rect x="7" y="15" width="2" height="1" fill="#000"/>
+        <rect x="10" y="3" width="1" height="8" fill="#e6e6e6"/>
+        <rect x="9" y="10" width="3" height="1" fill="#f5c542"/>
+      </svg>
+
+      <div class="ground"></div>
+    </div>
+  </header>
+
+  <section id="about">
+    <div class="container">
+      <h2>ABOUT ME</h2>
+      <div class="about-grid">
+        <div class="panel">
+          <p>
+            I'm Phitchayut, but everyone calls me PJ. I'm originally from Thailand and
+            currently studying Computer Science at BYU-Hawaii. I work on the AI developer
+            team at the Polynesian Cultural Center, where I create, solve, and generate
+            websites, apps, and APIs using backend services.
+          </p>
+          <p>
+            I love developing all kinds of platforms, with AI tools or without them.
+            Outside of code, I'm a big fan of horror movies, I listen to Thai-pop, and I
+            spend time on anime and video games, especially the Assassin's Creed series.
+          </p>
+        </div>
+        <dl class="panel facts">
+          <dt>USERNAME</dt>
+          <dd>pjayyy</dd>
+          <dt>BIRTHDAY</dt>
+          <dd>Oct 12, 2002</dd>
+          <dt>FROM</dt>
+          <dd>Thailand</dd>
+          <dt>BASED IN</dt>
+          <dd>Hawaii, USA</dd>
+          <dt>STUDY</dt>
+          <dd>Computer Science, BYU-Hawaii</dd>
+          <dt>WORK</dt>
+          <dd>AI Developer Team, Polynesian Cultural Center</dd>
+          <dt>INTO</dt>
+          <dd>Thai-pop, horror movies, anime, video games, Assassin's Creed</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="container">
+      <h2>SKILLS</h2>
+      <div class="skills">
+        <span class="skill">JavaScript</span>
+        <span class="skill">TypeScript</span>
+        <span class="skill">Python</span>
+        <span class="skill">HTML &amp; CSS</span>
+        <span class="skill">AI tools</span>
+        <span class="skill">Backend APIs</span>
+        <span class="skill">Cloud databases</span>
+        <span class="skill">Communication</span>
+        <span class="skill">Analysis</span>
+        <span class="skill">Detail-oriented</span>
+        <span class="skill">+ more</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="container">
+      <h2>PROJECTS</h2>
+      <div class="grid">
+        <article class="panel project">
+          <h3>SPACE SHOOTER</h3>
+          <p>A browser arcade game built with TypeScript and esbuild. Describe what it does and what you learned.</p>
+          <div class="tags"><span>TypeScript</span><span>GAME</span><span>esbuild</span></div>
+        </article>
+        <article class="panel project">
+          <h3>PROJECT TWO</h3>
+          <p>A short description of the problem it solves and your role in building it.</p>
+          <div class="tags"><span>TAG</span><span>TAG</span></div>
+        </article>
+        <article class="panel project">
+          <h3>PROJECT THREE</h3>
+          <p>Another project you are proud of. Mention the outcome, not just the tools.</p>
+          <div class="tags"><span>TAG</span><span>TAG</span></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="journey">
+    <div class="container">
+      <h2>JOURNEY</h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="when">NOW</div>
+          <strong>AI Developer Team, Polynesian Cultural Center</strong>
+          <p>Creating, solving, and generating websites, apps, and APIs with backend services.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="when">COLLEGE</div>
+          <strong>Computer Science, BYU-Hawaii</strong>
+          <p>Studying in Hawaii while building projects from the frontend to the cloud database.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="when">THE BEGINNING</div>
+          <strong>Thailand</strong>
+          <p>Where I'm from, and where my love for Thai-pop and horror films started.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="container">
+      <div class="panel contact">
+        <h2 style="justify-content: center;">CONTACT</h2>
+        <p>Open to collaborations, projects, and good conversations.</p>
+        <div class="contact-links">
+          <a class="btn" href="mailto:pjayyy96@gmail.com">EMAIL</a>
+          <a class="btn alt" href="https://github.com/pjayyy96">GITHUB</a>
+          <a class="btn alt" href="https://www.linkedin.com/in/phitchayut-choedchaiyaphum-1623b9352">LINKEDIN</a>
+          <a class="btn alt" href="https://www.facebook.com/pichayut.cherdchaiyaphum.3/">FACEBOOK</a>
+          <a class="btn alt" href="https://www.instagram.com/pjayyy__/">INSTAGRAM</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2026 Phitchayut "PJ" Choedchaiyaphum. PRESS START TO CONTINUE.</p>
+  </footer>
+
+</body>
+</html>
