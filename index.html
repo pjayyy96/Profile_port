@@ -223,6 +223,22 @@
     .job ul { list-style: none; display: grid; gap: 8px; }
     .job li { position: relative; padding-left: 22px; color: var(--muted); }
     .job li::before { content: ""; position: absolute; left: 0; top: 9px; width: 8px; height: 8px; background: var(--gold); }
+    /* Boss fight: dark knight "COLLEGE DEGREE" */
+    .boss-wrap { position: absolute; left: 64%; bottom: 12%; width: 24%; text-align: center; }
+    .boss-name { font-family: "Press Start 2P", monospace; font-size: 9px; color: #ff3b3b; text-shadow: 2px 2px 0 #000; margin-bottom: 8px; white-space: nowrap; }
+    .hp { width: 100%; height: 12px; border: 3px solid #000; background: #2a0a0a; margin-bottom: 8px; }
+    .hp-fill { height: 100%; width: 100%; background: #ff3b3b; transition: width 0.2s steps(4); }
+    .boss { display: block; width: 100%; height: auto; shape-rendering: crispEdges; animation: idle 1.2s steps(2) infinite; cursor: pointer; }
+    .boss.hurt { animation: flash 0.3s steps(2) 2; }
+    @keyframes idle { 50% { transform: translateY(-4px); } }
+    @keyframes flash { 50% { filter: brightness(3) sepia(1) hue-rotate(-50deg) saturate(6); } }
+    .dmg { position: absolute; left: 50%; top: 45%; transform: translateX(-50%); font-family: "Press Start 2P", monospace; font-size: 12px; color: #ffd23f; text-shadow: 2px 2px 0 #000; pointer-events: none; animation: floatup 0.8s steps(4) forwards; }
+    @keyframes floatup { to { transform: translate(-50%, -30px); opacity: 0; } }
+    .knight.fight { animation: lunge 0.45s ease-out; left: 30%; transform: none; }
+    @keyframes lunge { 0% { translate: 0 0; } 40% { translate: 500% 0; } 100% { translate: 0 0; } }
+    .fight-ui { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 18px; }
+    #log { color: var(--muted); font-size: 22px; }
+
     /* Current role: inverted colors to stand out */
     .job.current { background: var(--gold); border-color: #000; box-shadow: inset 0 0 0 4px #b8861a, 8px 8px 0 #000; }
     .job.current h3, .job.current .org, .job.current li { color: #14102a; }
@@ -399,7 +415,47 @@
         <rect x="9" y="10" width="3" height="1" fill="#f5c542"/>
       </svg>
 
+      <div class="boss-wrap">
+        <div class="boss-name">COLLEGE DEGREE</div>
+        <div class="hp"><div class="hp-fill" id="hp-fill"></div></div>
+        <svg class="boss" id="boss" viewBox="0 0 20 28" xmlns="http://www.w3.org/2000/svg" role="button" aria-label="Attack the College Degree boss">
+          <!-- horns -->
+          <rect x="4" y="0" width="2" height="4" fill="#1a1a24"/>
+          <rect x="14" y="0" width="2" height="4" fill="#1a1a24"/>
+          <!-- helmet -->
+          <rect x="6" y="2" width="8" height="7" fill="#1a1a24"/>
+          <rect x="8" y="5" width="2" height="1" fill="#ff3b3b"/>
+          <rect x="11" y="5" width="2" height="1" fill="#ff3b3b"/>
+          <rect x="8" y="7" width="5" height="1" fill="#0a0a10"/>
+          <!-- shoulders and spikes -->
+          <rect x="3" y="9" width="14" height="3" fill="#2b2b3a"/>
+          <rect x="2" y="8" width="2" height="2" fill="#555"/>
+          <rect x="16" y="8" width="2" height="2" fill="#555"/>
+          <!-- capes -->
+          <rect x="2" y="12" width="3" height="12" fill="#3a1030"/>
+          <rect x="15" y="12" width="3" height="12" fill="#3a1030"/>
+          <!-- armor -->
+          <rect x="6" y="12" width="8" height="7" fill="#2b2b3a"/>
+          <rect x="9" y="14" width="2" height="3" fill="#ff3b3b"/>
+          <rect x="6" y="19" width="8" height="1" fill="#888"/>
+          <!-- legs and boots -->
+          <rect x="6" y="20" width="3" height="6" fill="#1a1a24"/>
+          <rect x="11" y="20" width="3" height="6" fill="#1a1a24"/>
+          <rect x="5" y="26" width="4" height="2" fill="#000"/>
+          <rect x="11" y="26" width="4" height="2" fill="#000"/>
+          <!-- sword -->
+          <rect x="0" y="10" width="1" height="16" fill="#aab3c4"/>
+          <rect x="0" y="24" width="1" height="1" fill="#ff3b3b"/>
+          <rect x="0" y="25" width="1" height="1" fill="#ff3b3b"/>
+        </svg>
+      </div>
+
       <div class="ground"></div>
+    </div>
+
+    <div class="fight-ui">
+      <button class="btn" id="attack-btn" type="button">ATTACK!</button>
+      <span id="log">Hits: 0 · Keep attacking the COLLEGE DEGREE!</span>
     </div>
   </header>
 
@@ -643,5 +699,60 @@
     <p>&copy; 2026 Phitchayut "PJ" Choedchaiyaphum. PRESS START TO CONTINUE.</p>
   </footer>
 
+  <script>
+    (() => {
+      const MAX_HP = 100;
+      let hp = MAX_HP;
+      let hits = 0;
+      let busy = false;
+      const hero = document.querySelector('.knight');
+      const boss = document.getElementById('boss');
+      const hpFill = document.getElementById('hp-fill');
+      const bossWrap = document.querySelector('.boss-wrap');
+      const btn = document.getElementById('attack-btn');
+      const log = document.getElementById('log');
+
+      function showDamage(text) {
+        const span = document.createElement('span');
+        span.className = 'dmg';
+        span.textContent = text;
+        bossWrap.appendChild(span);
+        setTimeout(() => span.remove(), 900);
+      }
+
+      function attack() {
+        if (busy) return;
+        busy = true;
+        hero.classList.add('fight');
+        setTimeout(() => {
+          const dmg = 2 + Math.floor(Math.random() * 4); // 2 to 5 damage: a little hurt
+          hp = Math.max(0, hp - dmg);
+          hits += 1;
+          hpFill.style.width = (hp / MAX_HP) * 100 + '%';
+          showDamage('-' + dmg);
+          boss.classList.remove('hurt');
+          void boss.offsetWidth; // restart the hurt flash
+          boss.classList.add('hurt');
+          if (hp === 0) {
+            log.textContent = 'Defeated... but the COLLEGE DEGREE is back. Keep going!';
+            setTimeout(() => {
+              hp = MAX_HP;
+              hpFill.style.width = '100%';
+              log.textContent = 'Hits: ' + hits + ' · Keep attacking the COLLEGE DEGREE!';
+            }, 1600);
+          } else {
+            log.textContent = 'Hits: ' + hits + ' · Keep attacking the COLLEGE DEGREE!';
+          }
+        }, 180);
+        setTimeout(() => {
+          hero.classList.remove('fight');
+          busy = false;
+        }, 450);
+      }
+
+      btn.addEventListener('click', attack);
+      boss.addEventListener('click', attack);
+    })();
+  </script>
 </body>
 </html>
