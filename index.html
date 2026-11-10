@@ -223,6 +223,73 @@
     .job ul { list-style: none; display: grid; gap: 8px; }
     .job li { position: relative; padding-left: 22px; color: var(--muted); }
     .job li::before { content: ""; position: absolute; left: 0; top: 9px; width: 8px; height: 8px; background: var(--gold); }
+    /* Battlefield: the grass continues below the castle with AI knights vs dark knights */
+    .scene { margin-bottom: 150px; }
+    .battlefield {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      height: 130px;
+      overflow: hidden;
+      background:
+        repeating-linear-gradient(90deg, var(--grass) 0 16px, var(--grass-light) 16px 20px, var(--grass) 20px 32px),
+        var(--grass);
+      animation: scroll 1.5s linear infinite;
+    }
+    .unit { position: absolute; width: 5%; animation: ally-walk 10s linear infinite; }
+    .unit.foe { animation-name: foe-walk; }
+    .unit svg { display: block; width: 100%; height: auto; shape-rendering: crispEdges; color: var(--c, #888); animation: ally-flip 10s step-end infinite; animation-delay: inherit; }
+    .unit.foe svg { animation-name: foe-flip; color: #2b2b3a; }
+    .unit .tag { position: absolute; right: 100%; bottom: 40%; margin-right: 6px; font-family: "Press Start 2P", monospace; font-size: 7px; color: var(--c); text-shadow: 1px 1px 0 #000; white-space: nowrap; }
+    .claude { --c: #d97757; }
+    .codex { --c: #4fd1c5; }
+    .ai-coder { --c: #7c8cf8; }
+    .spark { position: absolute; left: 40%; width: 8px; height: 8px; background: #ffd23f; border: 2px solid #000; transform: rotate(45deg); animation: spark 10s steps(1) infinite; animation-delay: inherit; }
+    @keyframes ally-walk { 0% { left: var(--s); } 40% { left: var(--m); } 50% { left: var(--m); } 90% { left: var(--s); } 100% { left: var(--s); } }
+    @keyframes foe-walk { 0% { left: var(--es); } 40% { left: var(--em); } 50% { left: var(--em); } 90% { left: var(--es); } 100% { left: var(--es); } }
+    @keyframes ally-flip { 0% { transform: scaleX(1); } 50% { transform: scaleX(-1); } 99.9% { transform: scaleX(-1); } 100% { transform: scaleX(1); } }
+    @keyframes foe-flip { 0% { transform: scaleX(-1); } 50% { transform: scaleX(1); } 99.9% { transform: scaleX(1); } 100% { transform: scaleX(-1); } }
+    @keyframes spark { 0%, 38% { opacity: 0; } 40%, 48% { opacity: 1; } 50%, 100% { opacity: 0; } }
+
+    /* Victory: the boss falls, the dark knights kneel and surrender, the heroes cheer */
+    .scene.victory .hp { opacity: 0; transition: opacity 0.3s; }
+    .scene.victory .boss { animation: boss-fall 2.4s steps(6) forwards; transform-origin: bottom left; }
+    @keyframes boss-fall {
+      0% { transform: none; }
+      25% { transform: translateY(8%) scaleY(0.85); }
+      50% { transform: translateY(12%) scaleY(0.7); }
+      75% { transform: translateY(12%) rotate(45deg) scaleY(0.7); }
+      100% { transform: translateY(12%) rotate(90deg); }
+    }
+    .scene.victory .unit.foe { animation: none; left: 41%; }
+    .scene.victory .unit.foe svg { animation: foe-kneel 1.6s steps(4) forwards; transform-origin: bottom center; }
+    @keyframes foe-kneel {
+      0% { transform: scaleX(-1); }
+      50% { transform: scaleX(-1) translateY(20%) scaleY(0.8); }
+      100% { transform: scaleX(-1) translateY(35%) scaleY(0.6) rotate(-20deg); }
+    }
+    .white-flag { display: none; position: absolute; left: 60%; top: -28px; width: 14px; height: 9px; background: #fff; border: 2px solid #000; }
+    .white-flag::before { content: ""; position: absolute; left: -4px; top: -2px; width: 3px; height: 26px; background: #aab3c4; }
+    .scene.victory .white-flag { display: block; }
+    .scene.victory .unit.ally { animation: none; left: 35%; }
+    .scene.victory .unit.ally svg { animation: cheer-s 0.6s steps(2) infinite; }
+    .scene.victory .knight { animation: cheer 0.6s steps(2) infinite; }
+    .scene.victory .princess { animation: cheer-s 0.6s steps(2) infinite; }
+    @keyframes cheer { 0% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+    @keyframes cheer-s { 0% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+    .confetti { position: absolute; top: -10px; width: 6px; height: 6px; display: none; animation: confetti-fall 2.4s linear infinite; }
+    .scene.victory .confetti { display: block; }
+    @keyframes confetti-fall { 0% { transform: translateY(0) rotate(0deg); } 100% { transform: translateY(260px) rotate(360deg); } }
+
+    /* Princess Christine on the keep */
+    .princess { cursor: pointer; transform-box: fill-box; transform-origin: center bottom; animation: sway 2s steps(2) infinite; }
+    .princess:hover, .princess:focus { filter: drop-shadow(0 0 2px #ffd23f); outline: none; }
+    @keyframes sway { 50% { transform: translateY(-1px); } }
+    .npc-bubble { position: absolute; left: 62%; top: 0; width: 230px; background: #fff7e6; color: #14102a; border: 4px solid #000; box-shadow: 6px 6px 0 #000; padding: 12px 14px; font-size: 20px; line-height: 1.2; z-index: 2; }
+    .npc-bubble[hidden] { display: none; }
+    .npc-bubble strong { color: #c83a6a; font-weight: normal; }
+
     /* Boss fight: dark knight "COLLEGE DEGREE" */
     .boss-wrap { position: absolute; left: 64%; bottom: 12%; width: 24%; text-align: center; }
     .boss-name { font-family: "Press Start 2P", monospace; font-size: 9px; color: #ff3b3b; text-shadow: 2px 2px 0 #000; margin-bottom: 8px; white-space: nowrap; }
@@ -326,7 +393,7 @@
     </div>
 
     <!-- Castle scene -->
-    <div class="scene" aria-hidden="true">
+    <div class="scene" id="scene" aria-hidden="true">
       <svg class="castle" viewBox="0 0 160 96" xmlns="http://www.w3.org/2000/svg">
         <!-- sky sun/moon -->
         <rect x="134" y="6" width="8" height="8" fill="#f5c542"/>
@@ -393,6 +460,24 @@
         <rect x="60" y="30" width="6" height="12" fill="#c83a3a"/>
         <rect x="94" y="30" width="6" height="12" fill="#c83a3a"/>
 
+        <!-- princess Christine on top of the keep (click to chat) -->
+        <g class="princess" id="princess" role="button" tabindex="0" aria-label="Christine, PJ's wife">
+          <rect x="65" y="0" width="1" height="1" fill="#f5c542"/>
+          <rect x="67" y="0" width="1" height="1" fill="#f5c542"/>
+          <rect x="69" y="0" width="1" height="1" fill="#f5c542"/>
+          <rect x="71" y="0" width="1" height="1" fill="#f5c542"/>
+          <rect x="65" y="1" width="7" height="1" fill="#f5c542"/>
+          <rect x="64" y="2" width="8" height="3" fill="#6b3e26"/>
+          <rect x="64" y="5" width="2" height="6" fill="#6b3e26"/>
+          <rect x="70" y="5" width="2" height="6" fill="#6b3e26"/>
+          <rect x="66" y="3" width="4" height="3" fill="#f5d0a9"/>
+          <rect x="67" y="4" width="1" height="1" fill="#14102a"/>
+          <rect x="69" y="4" width="1" height="1" fill="#14102a"/>
+          <rect x="65" y="6" width="6" height="5" fill="#ff7ab6"/>
+          <rect x="66" y="6" width="4" height="2" fill="#c83a6a"/>
+          <rect x="64" y="11" width="8" height="3" fill="#ff7ab6"/>
+        </g>
+
         <!-- ground -->
         <rect x="0" y="86" width="160" height="10" fill="#2e6b35"/>
         <rect x="0" y="86" width="160" height="2" fill="#4a9a4a"/>
@@ -450,11 +535,83 @@
         </svg>
       </div>
 
+      <div class="npc-bubble" id="npc-bubble" hidden>
+        <strong>Hi! I'm Christine,</strong> and I'm his wife. We've been married since April 2026 and we've been living together happily ever since.
+      </div>
+
       <div class="ground"></div>
+
+      <div class="battlefield" aria-hidden="true">
+        <svg width="0" height="0" style="position: absolute;">
+          <defs>
+            <symbol id="kn" viewBox="0 0 12 16">
+              <rect x="5" y="0" width="2" height="2" fill="#ffd23f"/>
+              <rect x="3" y="2" width="6" height="4" fill="currentColor"/>
+              <rect x="4" y="4" width="4" height="1" fill="#14102a"/>
+              <rect x="2" y="6" width="8" height="2" fill="currentColor"/>
+              <rect x="4" y="8" width="4" height="4" fill="currentColor"/>
+              <rect x="4" y="12" width="1" height="3" fill="#5a4a7a"/>
+              <rect x="7" y="12" width="1" height="3" fill="#5a4a7a"/>
+              <rect x="3" y="15" width="2" height="1" fill="#000"/>
+              <rect x="7" y="15" width="2" height="1" fill="#000"/>
+              <rect x="10" y="3" width="1" height="8" fill="#e6e6e6"/>
+              <rect x="9" y="10" width="3" height="1" fill="#ffd23f"/>
+            </symbol>
+            <symbol id="dk" viewBox="0 0 12 16">
+              <rect x="2" y="0" width="1" height="3" fill="#1a1a24"/>
+              <rect x="9" y="0" width="1" height="3" fill="#1a1a24"/>
+              <rect x="3" y="2" width="6" height="4" fill="#1a1a24"/>
+              <rect x="4" y="4" width="4" height="1" fill="#ff3b3b"/>
+              <rect x="2" y="6" width="8" height="2" fill="#2b2b3a"/>
+              <rect x="4" y="8" width="4" height="4" fill="#2b2b3a"/>
+              <rect x="3" y="12" width="2" height="3" fill="#14102a"/>
+              <rect x="7" y="12" width="2" height="3" fill="#14102a"/>
+              <rect x="3" y="15" width="2" height="1" fill="#000"/>
+              <rect x="7" y="15" width="2" height="1" fill="#000"/>
+              <rect x="10" y="3" width="1" height="8" fill="#aab3c4"/>
+              <rect x="9" y="10" width="3" height="1" fill="#ff3b3b"/>
+            </symbol>
+          </defs>
+        </svg>
+
+        <!-- Duel 1: Claude knight vs dark knight -->
+        <div class="unit ally claude" style="--s: 2%; --m: 35%; bottom: 6px; animation-delay: 0s;">
+          <span class="tag">CLAUDE</span>
+          <svg viewBox="0 0 12 16"><use href="#kn"/></svg>
+        </div>
+        <div class="unit foe" style="--es: 94%; --em: 41%; bottom: 6px; animation-delay: 0s;">
+          <span class="white-flag"></span>
+          <svg viewBox="0 0 12 16"><use href="#dk"/></svg>
+        </div>
+        <span class="spark" style="bottom: 22px; animation-delay: 0s;"></span>
+
+        <!-- Duel 2: Codex knight vs dark knight -->
+        <div class="unit ally codex" style="--s: 2%; --m: 35%; bottom: 36px; animation-delay: -3.3s;">
+          <span class="tag">CODEX</span>
+          <svg viewBox="0 0 12 16"><use href="#kn"/></svg>
+        </div>
+        <div class="unit foe" style="--es: 94%; --em: 41%; bottom: 36px; animation-delay: -3.3s;">
+          <span class="white-flag"></span>
+          <svg viewBox="0 0 12 16"><use href="#dk"/></svg>
+        </div>
+        <span class="spark" style="bottom: 52px; animation-delay: -3.3s;"></span>
+
+        <!-- Duel 3: AI code knight vs dark knight -->
+        <div class="unit ally ai-coder" style="--s: 2%; --m: 35%; bottom: 66px; animation-delay: -6.6s;">
+          <span class="tag">AI CODER</span>
+          <svg viewBox="0 0 12 16"><use href="#kn"/></svg>
+        </div>
+        <div class="unit foe" style="--es: 94%; --em: 41%; bottom: 66px; animation-delay: -6.6s;">
+          <span class="white-flag"></span>
+          <svg viewBox="0 0 12 16"><use href="#dk"/></svg>
+        </div>
+        <span class="spark" style="bottom: 82px; animation-delay: -6.6s;"></span>
+      </div>
     </div>
 
     <div class="fight-ui">
       <button class="btn" id="attack-btn" type="button">ATTACK!</button>
+      <button class="btn alt" id="rematch-btn" type="button" hidden>REMATCH</button>
       <span id="log">Hits: 0 · Keep attacking the COLLEGE DEGREE!</span>
     </div>
   </header>
@@ -720,8 +877,37 @@
         setTimeout(() => span.remove(), 900);
       }
 
+      const scene = document.getElementById('scene');
+      const rematchBtn = document.getElementById('rematch-btn');
+
+      function victory() {
+        scene.classList.add('victory');
+        btn.disabled = true;
+        rematchBtn.hidden = false;
+        log.textContent = 'VICTORY! The COLLEGE DEGREE has fallen and surrendered. Hits: ' + hits;
+        const colors = ['#ffd23f', '#ff3b3b', '#4fd1c5', '#7c8cf8', '#ff7ab6'];
+        for (let i = 0; i < 18; i++) {
+          const piece = document.createElement('span');
+          piece.className = 'confetti';
+          piece.style.left = Math.random() * 100 + '%';
+          piece.style.background = colors[i % colors.length];
+          piece.style.animationDelay = -Math.random() * 2.4 + 's';
+          scene.appendChild(piece);
+        }
+      }
+
+      function rematch() {
+        scene.classList.remove('victory');
+        scene.querySelectorAll('.confetti').forEach((n) => n.remove());
+        hp = MAX_HP;
+        hpFill.style.width = '100%';
+        btn.disabled = false;
+        rematchBtn.hidden = true;
+        log.textContent = 'Round 2! The COLLEGE DEGREE is back. Hits: ' + hits;
+      }
+
       function attack() {
-        if (busy) return;
+        if (busy || hp === 0) return;
         busy = true;
         hero.classList.add('fight');
         setTimeout(() => {
@@ -734,12 +920,7 @@
           void boss.offsetWidth; // restart the hurt flash
           boss.classList.add('hurt');
           if (hp === 0) {
-            log.textContent = 'Defeated... but the COLLEGE DEGREE is back. Keep going!';
-            setTimeout(() => {
-              hp = MAX_HP;
-              hpFill.style.width = '100%';
-              log.textContent = 'Hits: ' + hits + ' · Keep attacking the COLLEGE DEGREE!';
-            }, 1600);
+            victory();
           } else {
             log.textContent = 'Hits: ' + hits + ' · Keep attacking the COLLEGE DEGREE!';
           }
@@ -752,6 +933,16 @@
 
       btn.addEventListener('click', attack);
       boss.addEventListener('click', attack);
+      rematchBtn.addEventListener('click', rematch);
+
+      // Princess Christine: click (or Enter/Space) to toggle her chat bubble
+      const princess = document.getElementById('princess');
+      const bubble = document.getElementById('npc-bubble');
+      const toggleBubble = () => { bubble.hidden = !bubble.hidden; };
+      princess.addEventListener('click', toggleBubble);
+      princess.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleBubble(); }
+      });
     })();
   </script>
 </body>
