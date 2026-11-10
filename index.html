@@ -4,6 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>About Me</title>
+  <!-- 8-bit knife icon for the browser tab and taskbar -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect x='7' y='0' width='1' height='1' fill='%23d9e0ee'/%3E%3Crect x='7' y='1' width='2' height='9' fill='%23d9e0ee'/%3E%3Crect x='8' y='1' width='1' height='9' fill='%238a93a8'/%3E%3Crect x='4' y='10' width='8' height='2' fill='%23f5c542'/%3E%3Crect x='6' y='12' width='4' height='3' fill='%236b3e26'/%3E%3Crect x='6' y='12' width='1' height='3' fill='%238a5a3a'/%3E%3Crect x='6' y='15' width='4' height='1' fill='%23f5c542'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet" />
@@ -143,15 +145,41 @@
       min-width: 36px;
       height: auto;
       shape-rendering: crispEdges;
-      animation: bob 1s steps(2) infinite;
+      animation: patrol 12s linear infinite;
     }
-    @keyframes bob { 50% { transform: translateY(-3px); } }
+    /* Knight walks back and forth in front of the gate */
+    @keyframes patrol {
+      0% { left: 28%; transform: scaleX(1); }
+      49.9% { left: 62%; transform: scaleX(1); }
+      50% { left: 62%; transform: scaleX(-1); }
+      99.9% { left: 28%; transform: scaleX(-1); }
+      100% { left: 28%; transform: scaleX(1); }
+    }
+    /* Scrolling grass */
     .scene .ground {
       height: 28px;
       background:
         repeating-linear-gradient(90deg, var(--grass) 0 16px, var(--grass-light) 16px 20px, var(--grass) 20px 32px),
         var(--grass);
       border-top: 4px solid #000;
+      animation: scroll 1.5s linear infinite;
+    }
+    @keyframes scroll { to { background-position: 32px 0; } }
+    /* Drifting clouds behind the castle */
+    .cloud { animation: drift 40s linear infinite; }
+    .cloud.c2 { animation-duration: 60s; animation-delay: -30s; }
+    @keyframes drift { from { transform: translateX(-40px); } to { transform: translateX(200px); } }
+    /* Waving flags */
+    .flag { transform-box: fill-box; transform-origin: left center; animation: wave 1.2s ease-in-out infinite alternate; }
+    .flag.f2 { animation-delay: -0.4s; }
+    .flag.f3 { animation-delay: -0.8s; }
+    @keyframes wave { from { transform: scaleX(1); } to { transform: scaleX(0.6) skewY(-6deg); } }
+    /* Twinkling stars */
+    .twinkle { animation: twinkle 2.4s steps(2) infinite; }
+    .twinkle.t2 { animation-delay: -1.2s; }
+    @keyframes twinkle { 50% { opacity: 0.2; } }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; }
     }
 
     /* About */
@@ -181,6 +209,27 @@
       border: 2px solid var(--accent-2);
       padding: 0 8px;
     }
+    .shot { display: block; width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border: 4px solid #000; margin-bottom: 16px; image-rendering: pixelated; }
+    .placeholder { display: grid; place-items: center; background: var(--panel-edge); color: var(--muted); font-family: "Press Start 2P", monospace; font-size: 10px; text-align: center; padding: 12px; }
+    .langs { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; }
+    .lang { text-align: center; }
+    .lang img { display: block; width: 56px; height: 56px; margin: 0 auto 12px; image-rendering: pixelated; }
+    .lang span { font-family: "Press Start 2P", monospace; font-size: 10px; color: var(--text); }
+    .jobs { display: grid; gap: 24px; }
+    .job header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; }
+    .job h3 { color: var(--gold); font-size: 13px; margin-bottom: 4px; }
+    .job .org { color: var(--accent-2); font-size: 20px; }
+    .job .when { font-family: "Press Start 2P", monospace; font-size: 9px; color: var(--text); background: var(--panel-edge); border: 2px solid var(--gold); padding: 6px 10px; white-space: nowrap; }
+    .job ul { list-style: none; display: grid; gap: 8px; }
+    .job li { position: relative; padding-left: 22px; color: var(--muted); }
+    .job li::before { content: ""; position: absolute; left: 0; top: 9px; width: 8px; height: 8px; background: var(--gold); }
+    /* Current role: inverted colors to stand out */
+    .job.current { background: var(--gold); border-color: #000; box-shadow: inset 0 0 0 4px #b8861a, 8px 8px 0 #000; }
+    .job.current h3, .job.current .org, .job.current li { color: #14102a; }
+    .job.current .org { font-weight: normal; }
+    .job.current li::before { background: #14102a; }
+    .job.current .when { background: #14102a; color: var(--gold); border-color: #14102a; }
+    .status { color: var(--red); font-size: 9px; vertical-align: middle; margin-left: 6px; }
     .project:hover { transform: translate(-2px, -2px); box-shadow: 10px 10px 0 #000; }
     .project { transition: transform 0.05s steps(2); }
 
@@ -267,18 +316,22 @@
         <rect x="134" y="6" width="8" height="8" fill="#f5c542"/>
         <rect x="130" y="10" width="16" height="0" fill="#f5c542"/>
         <!-- stars -->
-        <rect x="8" y="4" width="2" height="2" fill="#fff"/>
-        <rect x="24" y="12" width="2" height="2" fill="#fff"/>
-        <rect x="60" y="4" width="2" height="2" fill="#fff"/>
-        <rect x="100" y="14" width="2" height="2" fill="#fff"/>
+        <rect class="twinkle" x="8" y="4" width="2" height="2" fill="#fff"/>
+        <rect class="twinkle t2" x="24" y="12" width="2" height="2" fill="#fff"/>
+        <rect class="twinkle t2" x="60" y="4" width="2" height="2" fill="#fff"/>
+        <rect class="twinkle" x="100" y="14" width="2" height="2" fill="#fff"/>
+
+        <!-- clouds (drift behind the castle) -->
+        <g class="cloud c1"><rect x="6" y="16" width="16" height="4" fill="#3a2f5c"/><rect x="10" y="12" width="8" height="4" fill="#3a2f5c"/></g>
+        <g class="cloud c2"><rect x="110" y="22" width="20" height="4" fill="#3a2f5c"/><rect x="116" y="18" width="8" height="4" fill="#3a2f5c"/></g>
 
         <!-- flags -->
         <rect x="19" y="4" width="2" height="22" fill="#ccc"/>
-        <rect x="21" y="4" width="8" height="5" fill="#c83a3a"/>
+        <g class="flag"><rect x="21" y="4" width="8" height="5" fill="#c83a3a"/></g>
         <rect x="139" y="4" width="2" height="22" fill="#ccc"/>
-        <rect x="141" y="4" width="8" height="5" fill="#c83a3a"/>
+        <g class="flag f2"><rect x="141" y="4" width="8" height="5" fill="#c83a3a"/></g>
         <rect x="79" y="0" width="2" height="16" fill="#ccc"/>
-        <rect x="81" y="0" width="9" height="6" fill="#f5c542"/>
+        <g class="flag f3"><rect x="81" y="0" width="9" height="6" fill="#f5c542"/></g>
 
         <!-- left tower -->
         <rect x="8" y="26" width="28" height="60" fill="#7a7f99"/>
@@ -370,8 +423,6 @@
         <dl class="panel facts">
           <dt>USERNAME</dt>
           <dd>pjayyy</dd>
-          <dt>BIRTHDAY</dt>
-          <dd>Oct 12, 2002</dd>
           <dt>FROM</dt>
           <dd>Thailand</dd>
           <dt>BASED IN</dt>
@@ -391,12 +442,9 @@
     <div class="container">
       <h2>SKILLS</h2>
       <div class="skills">
-        <span class="skill">JavaScript</span>
-        <span class="skill">TypeScript</span>
-        <span class="skill">Python</span>
-        <span class="skill">HTML &amp; CSS</span>
         <span class="skill">AI tools</span>
         <span class="skill">Backend APIs</span>
+        <span class="skill">Frontend to cloud</span>
         <span class="skill">Cloud databases</span>
         <span class="skill">Communication</span>
         <span class="skill">Analysis</span>
@@ -406,24 +454,55 @@
     </div>
   </section>
 
+  <section id="languages">
+    <div class="container">
+      <h2>PROGRAMMING LANGUAGES</h2>
+      <div class="langs">
+        <div class="panel lang">
+          <img src="https://cdn.jsdelivr.net/npm/devicon@2.16.0/icons/javascript/javascript-original.svg" alt="JavaScript logo" />
+          <span>JAVASCRIPT</span>
+        </div>
+        <div class="panel lang">
+          <img src="https://cdn.jsdelivr.net/npm/devicon@2.16.0/icons/typescript/typescript-original.svg" alt="TypeScript logo" />
+          <span>TYPESCRIPT</span>
+        </div>
+        <div class="panel lang">
+          <img src="https://cdn.jsdelivr.net/npm/devicon@2.16.0/icons/python/python-original.svg" alt="Python logo" />
+          <span>PYTHON</span>
+        </div>
+        <div class="panel lang">
+          <img src="https://cdn.jsdelivr.net/npm/devicon@2.16.0/icons/html5/html5-original.svg" alt="HTML5 logo" />
+          <span>HTML5</span>
+        </div>
+        <div class="panel lang">
+          <img src="https://cdn.jsdelivr.net/npm/devicon@2.16.0/icons/css3/css3-original.svg" alt="CSS3 logo" />
+          <span>CSS3</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section id="projects">
     <div class="container">
       <h2>PROJECTS</h2>
       <div class="grid">
         <article class="panel project">
+          <img class="shot" src="images/space-shooter.png" alt="Space Shooter start screen" />
           <h3>SPACE SHOOTER</h3>
-          <p>A browser arcade game built with TypeScript and esbuild. Describe what it does and what you learned.</p>
+          <p>A browser arcade space shooter built with TypeScript and esbuild. Move, shoot, switch to new guns, and raise an energy shield to survive the waves.</p>
           <div class="tags"><span>TypeScript</span><span>GAME</span><span>esbuild</span></div>
         </article>
         <article class="panel project">
-          <h3>PROJECT TWO</h3>
-          <p>A short description of the problem it solves and your role in building it.</p>
-          <div class="tags"><span>TAG</span><span>TAG</span></div>
+          <img class="shot" src="images/tutu-chatbot.png" alt="Tutu's Sweet Shop chatbot button" />
+          <h3>TUTU'S SWEET SHOP CHATBOT</h3>
+          <p>An AI chatbot for a sweet shop. A Vite and TypeScript frontend talks to an Express backend that connects to Ollama, with a product list and the shop's database behind it.</p>
+          <div class="tags"><span>TypeScript</span><span>Vite</span><span>Express</span><span>Ollama</span></div>
         </article>
         <article class="panel project">
-          <h3>PROJECT THREE</h3>
-          <p>Another project you are proud of. Mention the outcome, not just the tools.</p>
-          <div class="tags"><span>TAG</span><span>TAG</span></div>
+          <div class="shot placeholder">SCREENSHOT COMING SOON</div>
+          <h3>PCC FOOD MARKETPLACE <span class="status">IN PROGRESS</span></h3>
+          <p>A practice online store for Laie residents to browse PCC food, order for pickup, and let admins manage the menu. It uses demo items and simulated payments only.</p>
+          <div class="tags"><span>Next.js</span><span>React</span><span>TypeScript</span><span>Drizzle</span><span>Neon DB</span></div>
         </article>
       </div>
     </div>
@@ -432,22 +511,114 @@
   <section id="journey">
     <div class="container">
       <h2>JOURNEY</h2>
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="when">NOW</div>
-          <strong>AI Developer Team, Polynesian Cultural Center</strong>
-          <p>Creating, solving, and generating websites, apps, and APIs with backend services.</p>
-        </div>
-        <div class="timeline-item">
-          <div class="when">COLLEGE</div>
-          <strong>Computer Science, BYU-Hawaii</strong>
-          <p>Studying in Hawaii while building projects from the frontend to the cloud database.</p>
-        </div>
-        <div class="timeline-item">
-          <div class="when">THE BEGINNING</div>
-          <strong>Thailand</strong>
-          <p>Where I'm from, and where my love for Thai-pop and horror films started.</p>
-        </div>
+      <div class="jobs">
+        <article class="panel job current">
+          <header>
+            <div>
+              <h3>AI DEVELOPER</h3>
+              <p class="org">Polynesian Cultural Center · AI Developer Team · La'ie, HI</p>
+            </div>
+            <span class="when">NOW · CURRENT ROLE</span>
+          </header>
+          <ul>
+            <li>Create, solve, and generate websites, apps, and APIs using backend services.</li>
+            <li>Build with AI tools and without them, choosing the right approach for each problem.</li>
+            <li>Work across the whole stack, from the user interface to backend APIs and cloud databases.</li>
+            <li>Apply analysis and attention to detail to every build, from first design to finished feature.</li>
+          </ul>
+        </article>
+
+        <article class="panel job">
+          <header>
+            <div>
+              <h3>SALES AGENT</h3>
+              <p class="org">Polynesian Cultural Center · Reservations &amp; Box Office · La'ie, HI</p>
+            </div>
+            <span class="when">MAY 2026 – OCT 2026</span>
+          </header>
+          <ul>
+            <li>Facilitated 500–700 customers weekly, selling tickets and processing reservations for individual customers, travel agents, and outbound sales orders.</li>
+            <li>Responded to customer questions, recommended upgrades on 15% of transactions, and processed reservation changes accurately.</li>
+            <li>Delivered clear, friendly service in a fast-paced, high-volume environment, including peak holiday periods.</li>
+            <li>Improved teamwork flow by 90%, strengthening sales support and the customer experience.</li>
+          </ul>
+        </article>
+
+        <article class="panel job">
+          <header>
+            <div>
+              <h3>B.M.S. COMPUTER SCIENCE</h3>
+              <p class="org">Brigham Young University – Hawaii · GPA 3.77</p>
+            </div>
+            <span class="when">2024 – PRESENT</span>
+          </header>
+          <ul>
+            <li>Building projects from the frontend to the cloud database.</li>
+          </ul>
+        </article>
+
+        <article class="panel job">
+          <header>
+            <div>
+              <h3>FULL-TIME MISSIONARY</h3>
+              <p class="org">The Church of Jesus Christ of Latter-day Saints</p>
+            </div>
+            <span class="when">JUN 2022 – JUN 2024</span>
+          </header>
+          <ul>
+            <li>Taught and collaborated with 50–60 individuals and families weekly through tailored lessons and English classes.</li>
+            <li>Gave feedback and ideas, and led 4 monthly meetings with organizational leaders.</li>
+            <li>Organized and led 5–7 training conferences every two months, supporting missionary preparation and teamwork.</li>
+            <li>Trained new missionaries and trainers, strengthening leadership capacity.</li>
+          </ul>
+        </article>
+
+        <article class="panel job">
+          <header>
+            <div>
+              <h3>VOCATIONAL CERTIFICATE IN MECHATRONICS</h3>
+              <p class="org">Nakhonratchasima Technical College, Thailand · GPA 3.86</p>
+            </div>
+            <span class="when">2019 – 2022</span>
+          </header>
+          <ul>
+            <li>Placed 3rd in Thailand in the Mechatronics and Robotics skills competition at the vocational college level.</li>
+          </ul>
+        </article>
+
+        <article class="panel job">
+          <header>
+            <div>
+              <h3>MECHANIC'S ASSISTANT</h3>
+              <p class="org">Simathai Automation Limited Partnership, Nakhonratchasima, Thailand</p>
+            </div>
+            <span class="when">MAR 2021 – MAY 2021</span>
+          </header>
+          <ul>
+            <li>Completed 5 projects in 2 months, supporting 3 technical teams with welding, wiring, and equipment setup.</li>
+            <li>Welded 2 electrical cabinets per week and operated drilling and machining tools, including cutters.</li>
+            <li>Reduced operating errors through detailed checks and kept a zero safety-incident record for 3 months.</li>
+            <li>Cut setup time and costs by 10% by finding issues early and preventing rework.</li>
+            <li>Handled on-site and off-site technical problems, restoring operations within about 2 hours on average.</li>
+          </ul>
+        </article>
+
+        <article class="panel job">
+          <header>
+            <div>
+              <h3>COMPUTER TECHNICIAN ASSISTANT</h3>
+              <p class="org">A&amp;O Tech Computer, Nakhonratchasima, Thailand</p>
+            </div>
+            <span class="when">APR 2019 – JUN 2019</span>
+          </header>
+          <ul>
+            <li>Assembled, cleaned, packaged, and configured 5–10 computer systems daily for top performance.</li>
+            <li>Sold computers and advised 10 customers weekly on hardware and software installations.</li>
+            <li>Spotted and fixed system flaws, reducing post-sale complaints by 75%.</li>
+            <li>Mentored 2 new team members, which led to more responsibility on critical technical tasks.</li>
+            <li>Resolved 5 customer technical issues a week, helping increase sales by 10%.</li>
+          </ul>
+        </article>
       </div>
     </div>
   </section>
